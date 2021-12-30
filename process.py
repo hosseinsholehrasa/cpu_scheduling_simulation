@@ -26,13 +26,24 @@ class State:
 
 
 class Process:
-    def __init__(self, pid, arrival_time, priority, burst_time):
+    def __init__(self, pid, arrival_time, priority, burst_time, state=State.READY):
+        """
+        :param pid: id of process
+        :param arrival_time: time of entering
+        :param priority: priority
+        :param burst_time: times that need to executed
+        :param state: process status
+        """
         self.pid = pid
         self.arrival_time = arrival_time
         self.priority = priority
         self.burst_time = burst_time
-        self.waiting_time = 0
-        self.turnaround_time = 0
+        self.waiting_time = None
+        self.turnaround_time = None
+        self.start_time = None
+        self.end_time = None
+        self.remaining_time = burst_time
+        self.state = state
 
     def __str__(self):
         return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority}"
