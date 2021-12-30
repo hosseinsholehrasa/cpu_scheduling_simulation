@@ -26,8 +26,12 @@ class State:
 
 
 class Process:
-    def __init__(self, pid, arrival_time, priority):
+    def __init__(self, pid, arrival_time, priority, burst_time):
         self.pid = pid
         self.arrival_time = arrival_time
         self.priority = priority
+        self.burst_time = burst_time
+        self.waiting_time = 0
+        self.turnaround_time = 0
+
 
