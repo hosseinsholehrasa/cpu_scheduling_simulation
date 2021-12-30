@@ -1,3 +1,28 @@
+class State:
+    """ Process states enum """
+    WAITING = 0
+    READY = 1
+    RUNNING = 2
+    TERMINATED = 3
+    SLEEPING = 4
+    EXECUTED = 5
+    NEW = 6
+
+    def __init__(self):
+        self.state = self.NEW
+
+    def set_state(self, state):
+        self.state = state
+
+    def get_state(self):
+        return self.state
+
+    def __str__(self):
+        translated_enums = {
+            0: 'waiting', 1: 'ready', 2: 'running', 3: 'terminated',
+            4: 'sleeping', 5: 'executed', 6: 'new'
+        }
+        return translated_enums[self.state]
 
 
 class Process:
