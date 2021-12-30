@@ -34,4 +34,6 @@ class Process:
         self.waiting_time = 0
         self.turnaround_time = 0
 
+    def __str__(self):
+        return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority}"
 
