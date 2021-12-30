@@ -4,7 +4,7 @@ class State:
     READY = 1
     RUNNING = 2
     TERMINATED = 3
-    SLEEPING = 4
+    SUSPENDED = 4
     EXECUTED = 5
     NEW = 6
 
@@ -20,7 +20,7 @@ class State:
     def __str__(self):
         translated_enums = {
             0: 'waiting', 1: 'ready', 2: 'running', 3: 'terminated',
-            4: 'sleeping', 5: 'executed', 6: 'new'
+            4: 'suspended', 5: 'executed', 6: 'new'
         }
         return translated_enums[self.state]
 
