@@ -59,12 +59,31 @@ class Simulator:
 
         return True
 
-    def read_processes_data(self, data_dir: str, dataframe=None) -> list:
+    def read_processes_data(self, path=None, dataframe=None) -> list:
         """
         read data from csv file or pandas dataframe
-        :return a list of process object:
+        one of path or dataframe parms needed
+        :param path: string path of your csv file
+        :param dataframe: you can pass dataframe object
+        :return: a list of process object
         """
-        pass
+        if isinstance(dataframe, pd.DataFrame):
+            df = dataframe
+        elif path and path.split('.')[-1] == 'csv':
+            df = pd.read_csv(path)
+        else:
+            raise Exception("Your file should be a csv format or pass dataframe object to function")
+
+        for i in range(0, df['pid'].count() - 1):
+            process = Process(
+                pid=df['pid'][i],
+                arrival_time=df['arrival_time'][i],
+                priority=df['priority'][i],
+                burst_time=df['burst_time'][i]
+            )
+            self.processes.append(process)
+
+        return self.processes
 
     def get_algorithm(self):
         """
