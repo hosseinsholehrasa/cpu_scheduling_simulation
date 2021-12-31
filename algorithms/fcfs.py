@@ -23,8 +23,7 @@ class FCFS(object):
         """
         timeline = 0.0
         cpu_idle_time = 0.0
-        while self.processes:
-            process = self.processes.pop(0)
+        for process in self.processes:
 
             # cpu waiting time
             if process.arrival_time > timeline:
@@ -45,9 +44,6 @@ class FCFS(object):
 
             process.state = State.EXECUTED
             self.executed_processes.append(process)
-
-        # other processes that have not completed store here
-        self.suspended_processes = self.processes
 
         return {
             "executed_processes": self.executed_processes,
