@@ -76,7 +76,7 @@ class Simulator:
         else:
             raise Exception("Your file should be a csv format or pass dataframe object to function")
 
-        for i in range(0, df['pid'].count() - 1):
+        for i in range(0, df['pid'].count()):
             process = Process(
                 pid=df['pid'][i],
                 arrival_time=df['arrival_time'][i],
