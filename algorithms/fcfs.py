@@ -7,7 +7,8 @@ class FCFS(object):
         """
         :param processes: list of processes sort by arrival time
         """
-        self.processes = list(processes).sort(key=lambda process: process.arrival_time)
+        self.processes = processes
+        self.processes.sort(key=lambda process: process.arrival_time)
         self.executed_processes = []
         self.suspended_processes = []
 
@@ -20,37 +21,36 @@ class FCFS(object):
             "cpu_idle_time": time that cpu was idle,
         }
         """
-        total_time = 0.0
+        timeline = 0.0
         cpu_idle_time = 0.0
         while self.processes:
             process = self.processes.pop(0)
 
             # cpu waiting time
-            if process.arrival_time > total_time:
-                cpu_idle_time += process.arrival_time - total_time
+            if process.arrival_time > timeline:
+                cpu_idle_time += process.arrival_time - timeline
                 # update time
-                total_time = process.arrival_time
-
-            # waiting, turnaround, response time
-            process.waiting_time = total_time - process.arrival_time
-            process.turnaround_time = process.response_time + process.burst_time
-            process.response_time = total_time - process.arrival_time
+                timeline = process.arrival_time
 
             # Run the process
-            process.start_time = total_time
-            total_time += process.burst_time
-            process.remaining_time -= process.burst_time
-            process.end_time = total_time
+            process.start_time = timeline
 
-            # be sure that process finished
-            if process.remaining_time == 0:
-                process.state = State.EXECUTED
-                self.executed_processes.append(process)
+            # waiting, turnaround, response time
+            process.waiting_time = timeline - process.arrival_time
+            process.response_time = timeline - process.arrival_time
+            process.turnaround_time = process.response_time + process.burst_time
+
+            timeline += process.burst_time
+            process.end_time = timeline
+
+            process.state = State.EXECUTED
+            self.executed_processes.append(process)
+
         # other processes that have not completed store here
         self.suspended_processes = self.processes
 
         return {
             "executed_processes": self.executed_processes,
-            "cpu_total_time": total_time,
+            "cpu_total_time": timeline,
             "cpu_idle_time": cpu_idle_time,
         }
