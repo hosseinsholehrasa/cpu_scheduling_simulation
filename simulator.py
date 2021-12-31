@@ -1,6 +1,7 @@
 import random
 import pandas as pd
 import algorithms
+import time
 
 from datetime import datetime
 from process import Process
@@ -11,14 +12,14 @@ def get_cpu_time_unit():
     a unit of time independent on cpu run this code for simulating time
     """
 
-    started_at = datetime.now()
+    started_at = time.time()
     for i in range(1, 10000):
         if i % 2 == 0:
             temp = i / 2
         else:
             temp = 2 * i
 
-    ended_at = datetime.now()
+    ended_at = time.time()
     return ended_at - started_at
 
 
