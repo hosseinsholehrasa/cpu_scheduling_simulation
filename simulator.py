@@ -1,9 +1,9 @@
 import random
 import pandas as pd
+import algorithms
 
 from datetime import datetime
 from process import Process
-import algorithms
 
 
 def get_cpu_time_unit():
@@ -42,19 +42,19 @@ class Simulator:
         :param max_arrival_time: maximum number for random number of arrival time
         :param path: path to save csv file
         :param size: number of processes
-        :return: None
+        :return: bool
         """
-        processes = []
+        data = []
         # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
         for i in range(size):
-            processes.append([
+            data.append([
                 i,  # PID
                 random.randint(0, max_arrival_time),  # arrival_time
                 random.randint(0, 20),  # priority
                 random.randint(0, 100),  # burst_time
             ])
 
-        df = pd.DataFrame(processes, columns=['pid', 'arrival_time', 'priority', 'burst_time'])
+        df = pd.DataFrame(data, columns=['pid', 'arrival_time', 'priority', 'burst_time'])
         df.to_csv(path_or_buf=path, index=False)
 
         return True
