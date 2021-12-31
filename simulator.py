@@ -61,13 +61,13 @@ class Simulator:
 
         return True
 
-    def read_processes_data(self, path=None, dataframe=None) -> list:
+    def read_processes_data(self, path=None, dataframe=None) -> bool:
         """
         read data from csv file or pandas dataframe
         one of path or dataframe parms needed
         :param path: string path of your csv file
         :param dataframe: you can pass dataframe object
-        :return: a list of process object
+        :return: a true boolean if everythings goes right
         """
         if isinstance(dataframe, pd.DataFrame):
             df = dataframe
@@ -85,7 +85,7 @@ class Simulator:
             )
             self.processes.append(process)
 
-        return self.processes
+        return True
 
     def get_algorithm_class(self):
         """
