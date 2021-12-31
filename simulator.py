@@ -48,9 +48,9 @@ class Simulator:
         """
         data = []
         # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
-        for i in range(size + 1):
+        for i in range(size):
             data.append([
-                i,  # PID
+                i + 1,  # PID
                 random.randint(0, max_arrival_time),  # arrival_time
                 random.randint(0, 20),  # priority
                 random.randint(0, 100),  # burst_time
