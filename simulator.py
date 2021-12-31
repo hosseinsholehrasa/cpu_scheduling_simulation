@@ -135,3 +135,22 @@ class Simulator:
         self.average_waiting_time = average_waiting_time
         self.average_turnaround_time = average_turnaround_time
         self.average_response_time = average_response_time
+
+    def __str__(self):
+        return {
+            "total_process": self.total_process,
+            "cpu_total_time": self.cpu_total_time,
+            "throughput": self.throughput,
+            "cpu_utilization": self.cpu_utilization,
+            "average_waiting_time": self.average_waiting_time,
+            "average_turnaround_time": self.average_turnaround_time,
+            "average_response_time": self.average_response_time
+        }
+
+
+if __name__ == '__main__':
+    algorithm = input("algorithm name")
+    simulate = Simulator(algorithm)
+    simulate.read_processes_data("test.csv")
+    simulate.run()
+    print(simulate.__str__())
