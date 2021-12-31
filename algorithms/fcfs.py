@@ -31,11 +31,9 @@ class FCFS(object):
                 # update time
                 total_time = process.arrival_time
 
-            # waiting time
+            # waiting, turnaround, response time
             process.waiting_time = total_time - process.arrival_time
-            # turnaround time
             process.turnaround_time = process.response_time + process.burst_time
-            # response time
             process.response_time = total_time - process.arrival_time
 
             # Run the process
@@ -48,11 +46,11 @@ class FCFS(object):
             if process.remaining_time == 0:
                 process.state = State.EXECUTED
                 self.executed_processes.append(process)
-
+        # other processes that have not completed store here
         self.suspended_processes = self.processes
 
         return {
             "executed_processes": self.executed_processes,
-            "total_time": total_time,
+            "cpu_total_time": total_time,
             "cpu_idle_time": cpu_idle_time,
         }

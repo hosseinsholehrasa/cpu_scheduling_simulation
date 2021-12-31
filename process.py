@@ -45,6 +45,10 @@ class Process:
         self.remaining_time = burst_time
         self.state = state
 
+    @property
+    def response_time(self):
+        return self.start_time - self.arrival_time
+
     def __str__(self):
         return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority}"
 
