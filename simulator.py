@@ -26,6 +26,7 @@ class Simulator:
 
     def __init__(self, algorithm: str):
         self.algorithm = algorithm
+        self.algorithm_class = self.get_algorithm_class()
         self.processes = []
         self.run_time = 0
         self.cpu_total_time = 0
@@ -46,7 +47,7 @@ class Simulator:
         """
         data = []
         # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
-        for i in range(size):
+        for i in range(size + 1):
             data.append([
                 i,  # PID
                 random.randint(0, max_arrival_time),  # arrival_time
@@ -85,7 +86,7 @@ class Simulator:
 
         return self.processes
 
-    def get_algorithm(self):
+    def get_algorithm_class(self):
         """
         find algorithm class based on algorithm folder
         :return a class
@@ -94,5 +95,5 @@ class Simulator:
             return getattr(algorithms, self.algorithm)
         except Exception as e:
             print(e)
-            print("try again!")
-            exit()
+            raise Exception("try again! you have to enter a valid algorithm")
+
