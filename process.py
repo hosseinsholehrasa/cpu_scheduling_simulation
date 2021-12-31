@@ -38,16 +38,13 @@ class Process:
         self.arrival_time = arrival_time
         self.priority = priority
         self.burst_time = burst_time
+        self.response_time = None
         self.waiting_time = None
         self.turnaround_time = None
         self.start_time = None
         self.end_time = None
         self.remaining_time = burst_time
         self.state = state
-
-    @property
-    def response_time(self):
-        return self.start_time - self.arrival_time
 
     def __str__(self):
         return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority}"
