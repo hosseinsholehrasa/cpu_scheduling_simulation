@@ -3,7 +3,6 @@ import pandas as pd
 import algorithms
 import time
 
-from datetime import datetime
 from process import Process
 
 
@@ -29,6 +28,7 @@ class Simulator:
         self.algorithm = algorithm
         self.algorithm_class = self.get_algorithm_class()
         self.processes = []
+        self.total_process = 0
         self.run_time = 0
         self.cpu_total_time = 0
         self.cpu_utilization = 0
@@ -98,3 +98,40 @@ class Simulator:
             print(e)
             raise Exception("try again! you have to enter a valid algorithm")
 
+    def run(self):
+        """
+        Simulate algorithm and save the result of it
+        """
+
+        if len(self.processes) == 0:
+            raise Exception("you have to load processes")
+
+        # algorithm instance. need process list object
+        algorithm = self.algorithm_class(self.processes)
+
+        start_time = time.time()
+        # run algorithm
+        result = algorithm.run()
+        end_time = time.time()
+        self.run_time = end_time - start_time
+
+        # set result of simulation
+        # this processes referred to executed processes in output of algorithm run
+        processes = result['executed_processes']
+        total_process = len(processes)
+        cpu_total_time = result['cpu_total_time']
+
+        throughput = total_process / cpu_total_time
+        cpu_utilization = (cpu_total_time - result['cpu_idle_time']) / cpu_total_time
+
+        average_waiting_time = sum(process.waiting_time for process in processes) / total_process
+        average_turnaround_time = sum(process.turnaround_time for process in processes) / total_process
+        average_response_time = sum(process.response_time for process in processes) / total_process
+
+        self.total_process = total_process
+        self.cpu_total_time = cpu_total_time
+        self.throughput = throughput
+        self.cpu_utilization = cpu_utilization
+        self.average_waiting_time = average_waiting_time
+        self.average_turnaround_time = average_turnaround_time
+        self.average_response_time = average_response_time
