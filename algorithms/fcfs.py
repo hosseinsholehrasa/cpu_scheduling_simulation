@@ -40,9 +40,12 @@ class FCFS(object):
             process.turnaround_time = process.response_time + process.burst_time
 
             timeline += process.burst_time
+            process.remaining_time -= process.burst_time
             process.end_time = timeline
 
             process.state = State.EXECUTED
+            print(process)
+
             self.executed_processes.append(process)
 
         return {

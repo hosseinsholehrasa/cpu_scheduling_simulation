@@ -47,5 +47,7 @@ class Process:
         self.state = state
 
     def __str__(self):
-        return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority}"
+        return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority} |" \
+               f" 'burst_time': {self.burst_time} | 'remaining_time': {self.remaining_time} |" \
+               f" 'state': {self.state}"
 
