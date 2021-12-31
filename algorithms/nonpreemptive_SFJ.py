@@ -54,15 +54,43 @@ class NonPreemptiveSFJ(object):
                 elif process.arrival_time > self.timeline:
                     break
 
+            self.ready_queue.sort(key=lambda p: p.burst_time)
+
             if self.running_process is None:
                 # after sorting ready_queue by burst time, get first index and start to run that process
-                self.ready_queue.sort(key=lambda p: p.burst_time)
                 self.running_process = self.ready_queue.pop(0)
                 self.running_process.start_time = self.timeline
                 self.running_process.state = State.RUNNING
+
+            # run process until some important things happen
+            next_important_time = self.get_next_important_time()
+            if self.running_process:
+                self.running_process.remaining_time -= (next_important_time - self.timeline)
+            else:
+                self.cpu_idle_time += (next_important_time - self.timeline)
+            self.timeline = next_important_time
 
         return {
             "executed_processes": self.executed_processes,
             "cpu_total_time": self.timeline,
             "cpu_idle_time": self.cpu_idle_time,
         }
+
+    def get_next_important_time(self):
+        """
+        Find next important things which happen in the timeline
+        :return: Int
+        """
+        # we have deleted process from list when we decided about it to be an ready queue or running process
+        future_processes = self.processes
+
+        # ready queue and future processes are sorted by arrival time
+        if future_processes:
+            # next process arrival time or next ready queue arrival time
+            if not self.running_process:
+                return min(future_processes[0].arrival_time, self.ready_queue[0].arrival_time)
+            # if we have running_process so next process arrival time or remaining time to execute process
+            else:
+                return min(self.running_process.remaining_time + self.timeline, future_processes[0].arrival_time)
+        # our processes have ended
+        return self.running_process.remaining_time + self.timeline
