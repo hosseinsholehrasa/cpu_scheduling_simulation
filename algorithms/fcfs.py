@@ -45,8 +45,6 @@ class FCFS(object):
             process.end_time = self.timeline
 
             process.state = State.EXECUTED
-            print(process)
-
             self.executed_processes.append(process)
 
         return {
