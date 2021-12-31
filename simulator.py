@@ -139,6 +139,7 @@ class Simulator:
     def __str__(self):
         return {
             "total_process": self.total_process,
+            "run_time": self.run_time,
             "cpu_total_time": self.cpu_total_time,
             "throughput": self.throughput,
             "cpu_utilization": self.cpu_utilization,
