@@ -48,6 +48,8 @@ class Process:
 
     def __str__(self):
         return f"pid: {self.pid} | arrival_time: {self.arrival_time} | priority: {self.priority} |" \
-               f" 'burst_time': {self.burst_time} | 'remaining_time': {self.remaining_time} |" \
-               f" 'state': {self.state}"
+               f" 'burst_time': {self.burst_time} | 'waiting_time: {self.waiting_time}' |" \
+               f" 'turnaround_time': {self.turnaround_time} | 'response_time': {self.response_time} |" \
+               f" 'start_time': {self.start_time} | 'end_time': {self.end_time} |" \
+               f" 'remaining_time': {self.remaining_time} | 'state': {self.state}"
 
