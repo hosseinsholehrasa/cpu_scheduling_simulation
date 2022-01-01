@@ -56,8 +56,9 @@ class NonPreemptivePriority(object):
                 elif process.arrival_time > self.timeline:
                     break
             # for deleting new arrived processes from self.processes list
-            if new_arrived:
-                self.remove_processes(new_arrived)
+            for process in new_arrived:
+                if process in self.processes:
+                    self.processes.remove(process)
 
             self.ready_queue.sort(key=lambda p: p.priority)
 
@@ -80,17 +81,6 @@ class NonPreemptivePriority(object):
             "cpu_total_time": self.timeline,
             "cpu_idle_time": self.cpu_idle_time,
         }
-
-    def remove_processes(self, processes: list) -> bool:
-        """
-        Remove processes from self.processes list
-        :param processes: list of processes
-        :return: boolean
-        """
-        for process in processes:
-            if process in self.processes:
-                self.processes.remove(process)
-        return True
 
     def get_next_important_time(self):
         """
