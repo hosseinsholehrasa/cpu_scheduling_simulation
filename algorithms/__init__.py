@@ -1,2 +1,3 @@
 from algorithms.fcfs import FCFS
 from algorithms.nonpreemptive_SFJ import NonPreemptiveSFJ
+from algorithms.nonpreemptive_priority import NonPreemptivePriority
