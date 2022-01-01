@@ -78,9 +78,12 @@ class PreemptivePriority(object):
                 # free this variable memory
                 arrived_processes.clear()
 
+            # sort ready queue for better control on it in next steps
+            self.ready_queue.sort(key=lambda p: p.priority)
+
             # If no process is running, then pick the process from ready queue, maybe a process has ran before
             if self.running_process is None and self.ready_queue:
-                self.ready_queue.sort(key=lambda x: x.priority)
+                # we have an sorted ready queue
                 self.running_process = self.ready_queue.pop(0)
                 self.running_process.start_time = self.running_process.start_time or self.timeline
 
@@ -105,7 +108,8 @@ class PreemptivePriority(object):
         """
         # we have deleted process from list when we decided about it to be an ready queue or running process
         future_processes = self.processes
-        self.ready_queue.sort(key=lambda p: p.priority)
+        # we have an sorted ready queue
+
         if future_processes:
             # we have some conditions here. we have to compare ready queue and next process with their arrival time and
             # priority so just update time with 1
