@@ -61,6 +61,52 @@ class Simulator:
 
         return True
 
+    def save_result_simulation(self):
+        """
+        Save result of simulation to results/algorithmname.csv
+        :param max_arrival_time: maximum number for random number of arrival time
+        :param path: path to save csv file
+        :param size: number of processes
+        :return: bool
+        """
+        if not self.cpu_total_time > 0:
+            print("you have to run an algorithm then save it")
+            return
+
+        data = []
+        columns = ['pid', 'arrival_time', 'priority', 'burst_time', 'waiting_time', 'turnaround_time', 'response_time',
+                   'start_time', 'end_time',    # process information
+                   'total_process', 'cpu_total_time', 'cpu_utilization', 'throughput',  # simulation information
+                   'average_waiting_time', 'average_turnaround_time', 'average_response_time']
+        # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
+        for process in self.processes:
+            data.append([
+                process.pid,
+                process.arrival_time,
+                process.priority,
+                process.burst_time,
+                process.waiting_time,
+                process.turnaround_time,
+                process.response_time,
+                process.start_time,
+                process.end_time,
+            ])
+
+        # insert simulation information to just first row
+        data[0].extend([
+            self.total_process,
+            self.cpu_total_time,
+            self.cpu_utilization,
+            self.throughput,
+            self.average_waiting_time,
+            self.average_turnaround_time,
+            self.average_response_time
+        ])
+        df = pd.DataFrame(data, columns=columns)
+        df.to_csv(path_or_buf=f"results/{str(self.algorithm)}.csv", index=False)
+
+        return True
+
     def read_processes_data(self, path=None, dataframe=None) -> bool:
         """
         read data from csv file or pandas dataframe
@@ -119,7 +165,7 @@ class Simulator:
         # this processes referred to executed processes in output of algorithm run
         processes = result['executed_processes']
         total_process = len(processes)
-        cpu_total_time = result['cpu_total_time']
+        cpu_total_time = result['cpu_total_time'] * get_cpu_time_unit()
 
         throughput = total_process / cpu_total_time
         cpu_utilization = (cpu_total_time - result['cpu_idle_time']) / cpu_total_time
@@ -135,6 +181,8 @@ class Simulator:
         self.average_waiting_time = average_waiting_time
         self.average_turnaround_time = average_turnaround_time
         self.average_response_time = average_response_time
+        # update processes
+        self.processes = processes
 
     def __str__(self):
         return {
@@ -154,4 +202,5 @@ if __name__ == '__main__':
     simulate = Simulator(algorithm)
     simulate.read_processes_data("test.csv")
     simulate.run()
+    simulate.save_result_simulation()
     print(simulate.__str__())
