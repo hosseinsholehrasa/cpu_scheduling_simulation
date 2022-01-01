@@ -38,6 +38,7 @@ class NonPreemptiveSFJ(object):
                 self.running_process.turnaround_time = self.running_process.end_time - self.running_process.arrival_time
                 self.running_process.waiting_time = self.running_process.start_time - self.running_process.arrival_time
                 self.running_process.response_time = self.running_process.start_time - self.running_process.arrival_time
+                self.running_process.state = State.EXECUTED
                 self.executed_processes.append(self.running_process)
                 self.running_process = None
 
@@ -45,14 +46,20 @@ class NonPreemptiveSFJ(object):
                 if not (self.running_process or self.processes or self.ready_queue):
                     break
 
+            new_arrived = []
             # processes that their arrival time are equal to this timeline goes to ready queue
             for process in self.processes:
                 if process.arrival_time == self.timeline:
                     self.ready_queue.append(process)
-                    self.processes.remove(process)
+                    new_arrived.append(process)
                 # for finishing sooner
                 elif process.arrival_time > self.timeline:
                     break
+
+            # deleting new arrived processes from self.processes list
+            for process in new_arrived:
+                if process in self.processes:
+                    self.processes.remove(process)
 
             self.ready_queue.sort(key=lambda p: p.burst_time)
 
