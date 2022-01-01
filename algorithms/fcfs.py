@@ -2,7 +2,9 @@ from process import State
 
 
 class FCFS(object):
-
+    """
+    an algorithm which sort processes by the first arrival time. It's a non-preemptive algorithm
+    """
     def __init__(self, processes: list):
         """
         :param processes: list of processes sort by arrival time
