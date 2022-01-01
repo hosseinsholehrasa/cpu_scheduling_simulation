@@ -85,7 +85,10 @@ class PreemptivePriority(object):
             if self.running_process is None and self.ready_queue:
                 # we have an sorted ready queue
                 self.running_process = self.ready_queue.pop(0)
-                self.running_process.start_time = self.running_process.start_time or self.timeline
+                if self.running_process.start_time is None:
+                    self.running_process.start_time = self.timeline
+                else:
+                    self.running_process.start_time = self.running_process.start_time
 
             # run process until some important things happen
             next_important_time = self.get_next_important_time()
