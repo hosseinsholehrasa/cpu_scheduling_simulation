@@ -46,22 +46,26 @@ class NonPreemptiveSFJ(object):
                 if not (self.running_process or self.processes or self.ready_queue):
                     break
 
-            new_arrived = []
+            arrived_processes = []
             # processes that their arrival time are equal to this timeline goes to ready queue
             for process in self.processes:
                 if process.arrival_time == self.timeline:
                     self.ready_queue.append(process)
-                    new_arrived.append(process)
+                    arrived_processes.append(process)
                 # for finishing sooner
                 elif process.arrival_time > self.timeline:
                     break
 
             # deleting new arrived processes from self.processes list
-            for process in new_arrived:
+            for process in arrived_processes:
                 if process in self.processes:
                     self.processes.remove(process)
 
-            self.ready_queue.sort(key=lambda p: p.burst_time)
+            # sort ready queue when we have new processes that are not in the list. otherwise, we have an sorted list
+            # It is boosting the run time. Thanks to my mind.
+            if arrived_processes:
+                self.ready_queue.sort(key=lambda p: p.burst_time)
+
 
             if self.running_process is None:
                 # after sorting ready_queue by burst time, get first index and start to run that process
