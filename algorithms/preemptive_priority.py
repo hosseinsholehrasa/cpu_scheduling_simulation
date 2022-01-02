@@ -31,7 +31,7 @@ class PreemptivePriority(object):
 
         while self.processes or self.ready_queue or self.running_process:
 
-            # a running process have done
+            # a running process have done its work
             if self.running_process and self.running_process.remaining_time == 0:
                 self.running_process.end_time = self.timeline
                 # calculate turnaround and waiting and response time
