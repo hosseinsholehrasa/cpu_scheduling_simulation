@@ -76,9 +76,8 @@ class PreemptiveSFJ(object):
 
                 # free this variable memory
                 arrived_processes.clear()
-
-            # sort ready queue for better control on it in next steps
-            self.ready_queue.sort(key=lambda p: p.remaining_time)
+                # sort ready queue when we have new processes that aren't in the list. otherwise, we have an sorted list
+                self.ready_queue.sort(key=lambda p: p.remaining_time)
 
             # If no process is running, then pick the process from ready queue, maybe a process has ran before
             if self.running_process is None and self.ready_queue:
@@ -119,7 +118,7 @@ class PreemptiveSFJ(object):
                 return self.timeline + 1
             # if we have running process when we have future processes,
             # the important time is next arrival time or finishing the process
-            return min((self.running_process.remaining_time or 1) + self.timeline, future_processes[0].arrival_time)
+            return min(self.running_process.remaining_time + self.timeline, future_processes[0].arrival_time)
         else:
             if not self.running_process:
                 return self.timeline + 1
