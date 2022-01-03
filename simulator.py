@@ -1,7 +1,8 @@
 import random
-import pandas as pd
 import time
-import algorithms
+import algorithms   # local module
+import pandas as pd
+import graphic as simulation_graphic
 
 from process import Process
 from pathlib import Path
@@ -455,9 +456,19 @@ class Simulator:
 
 
 if __name__ == '__main__':
-    algorithm = input("algorithm name")
-    simulate = Simulator(algorithm)
-    simulate.read_processes_data("test.csv")
-    simulate.run()
-    simulate.save_result_simulation()
-    print(simulate.__str__())
+    simulation_graphic.run()
+    # algorithm = "NonPreemptivePriority"
+    # simulate = Simulator(algorithm)
+    # for al in ["NonPreemptivePriority", "PreemptivePriority"]:
+    #     s = Simulator(al)
+    #     s.read_processes_data("data.csv")
+    #     s.run()
+    #     print(s.__str__())
+    #     s.save_result_simulation()
+
+    # simulate.analyze_algorithms()
+    # simulate.read_processes_data()
+    # simulate.run()
+    # print(simulate.__str__())
+    # simulate.save_result_simulation()
+    # simulate.plot_algorithm_result()
