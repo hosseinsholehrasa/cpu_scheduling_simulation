@@ -1,6 +1,6 @@
 import random
 import time
-import algorithms   # local module
+import algorithms  # local module
 import pandas as pd
 import graphic as simulation_graphic
 
@@ -136,6 +136,16 @@ class Simulator:
                 index=index_ranges)
 
         return compress_df
+
+    def set_algorithm(self, algorithm: str) -> bool:
+        """
+        changing algorithm and validate algorithm
+        :param algorithm: new algorithm name
+        :return: True if has changed
+        """
+        self.algorithm = algorithm
+        self.algorithm_class = self.get_algorithm_class()
+        return True
 
     @staticmethod
     def generate_processes_data(path: str = 'data.csv', size: int = 1000, max_arrival_time: int = 1000) -> bool:
@@ -308,7 +318,7 @@ class Simulator:
             try:
                 df = pd.read_csv(folder_path / f"{self.algorithm}.csv", usecols=columns)
                 algorithms_data.append([
-                    algo,   # algorithm name
+                    algo,  # algorithm name
                     df['cpu_total_time'][0],
                     df['average_waiting_time'][0],
                     df['average_turnaround_time'][0],
