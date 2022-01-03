@@ -47,6 +47,36 @@ class Simulator:
         self.average_turnaround_time = 0.0
         self.average_response_time = 0.0
 
+    def _compress_df_rows(self, df: pd.DataFrame, column: str) -> pd.DataFrame:
+
+        # raise error if column not in compress columns
+        if column not in ('priority', 'burst_time', 'arrival_time'):
+            raise KeyError("Your column not valid")
+
+        df = df.sort_values(column, ignore_index=True)
+        unique_columns = list(df[column].unique())
+        # dataframe for plotting data
+
+        data = []
+        if column == "priority":
+            # mean over each priority
+            for c in unique_columns:
+                result = df.where(df[column] == c).mean(numeric_only=True)
+                data.append([
+                    result['waiting_time'],
+                    result['turnaround_time'],
+                    result['response_time']
+                ])
+        elif column == "burst_time":
+            pass
+        elif column == "arrival_time":
+            pass
+        compress_df = pd.DataFrame(
+            data,
+            columns=['waiting_time', 'turnaround_time', 'response_time'],
+            index=unique_columns)
+        return compress_df
+
     @staticmethod
     def generate_processes_data(path: str, size: int = 1000, max_arrival_time: int = 1000) -> bool:
         """
