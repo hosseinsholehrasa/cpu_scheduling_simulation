@@ -159,18 +159,31 @@ def run():
     ########################################## main page ########################################################
 
     # generate button
-    def generte_button_command():
+    def generate_button_command():
         path = 'data2.csv'
         number = 1000
         result = Simulator.generate_processes_data(path, number)
         if result:
             messagebox.showinfo("Info", f"{number} processes generated in {path}")
+            # going to next page
+            algo_page()
+
     btn_generate = tk.Button(main_window, text='Generate Processes', font=("chiller", 18), height=2, width=20,
-                             bg="deeppink3", fg="yellow", command=generte_button_command)
+                             bg="maroon3", fg="yellow", command=generate_button_command)
     btn_generate.place(x=250, y=250)
+
     # load button
-    btn_load = tk.Button(main_window, text='Load Processes', font=("chiller", 18),
-                         height=2, width=20, bg="maroon3", fg="yellow")
+    def load_button_command():
+        path = 'data2.csv'
+        simulator = Simulator("FCFS")
+        result = simulator.read_processes_data(path)
+        if result:
+            messagebox.showinfo("Info", f"{simulator.total_process} loaded processes from {path}")
+            # going to next page
+            algo_page(simulator)
+
+    btn_load = tk.Button(main_window, text='Load Processes', font=("chiller", 18), height=2, width=20,
+                         bg="maroon3", fg="yellow", command=load_button_command)
     btn_load.place(x=250, y=350)
 
     # exit button
