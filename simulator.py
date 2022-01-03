@@ -4,6 +4,7 @@ import time
 import algorithms
 
 from process import Process
+from pathlib import Path
 
 
 def get_cpu_time_unit():
@@ -286,11 +287,17 @@ class Simulator:
             self.average_response_time
         ])
         df = pd.DataFrame(data, columns=columns)
-        df.to_csv(path_or_buf=f"results/{str(self.algorithm)}.csv", index=False)
+
+        # handle path in linux and windows
+        folder_path = Path("results/")
+        df.to_csv(path_or_buf=folder_path / f"{self.algorithm}.csv", index=False)
 
         return True
 
     def analyze_algorithms(self):
+
+        # handle path in linux and windows
+        folder_path = Path("results/")
         columns = [
             'cpu_total_time', 'average_waiting_time', 'average_turnaround_time', 'average_response_time'
         ]
@@ -298,7 +305,7 @@ class Simulator:
         exists_algorithms = []
         for algo in self.algorithms_list:
             try:
-                df = pd.read_csv(f"results/{algo}.csv", usecols=columns)
+                df = pd.read_csv(folder_path / f"{self.algorithm}.csv", usecols=columns)
                 algorithms_data.append([
                     algo,   # algorithm name
                     df['cpu_total_time'][0],
@@ -315,7 +322,7 @@ class Simulator:
 
         columns.insert(0, 'name')
         algorithms_df = pd.DataFrame(algorithms_data, columns=columns, index=exists_algorithms)
-        algorithms_df.to_csv("results/results.csv", index=False)
+        algorithms_df.to_csv(folder_path / "results.csv", index=False)
 
         # create subpot
         subplot = algorithms_df.plot(kind='bar')
@@ -328,11 +335,14 @@ class Simulator:
         # Set the figure title
         subplot.figure.canvas.manager.set_window_title(f"analyze {self.total_process} algorithms")
         subplot.figure.show()
-        subplot.figure.savefig('results/result')
+        subplot.figure.savefig(folder_path / "result")
 
     def plot_algorithm_result(self):
+
+        # handle path in linux and windows
+        folder_path = Path("results/")
         try:
-            df = pd.read_csv(f"results/{str(self.algorithm)}.csv")
+            df = pd.read_csv(folder_path / f"{self.algorithm}.csv")
         except FileNotFoundError:
             raise Exception("You should have run algorithm first")
 
@@ -424,9 +434,11 @@ class Simulator:
         burst_subplot.figure.show()
         arrival_subplot.figure.show()
 
-        priority_subplot.figure.savefig(f'results/charts/priority_{self.algorithm}')
-        burst_subplot.figure.savefig(f'results/charts/burs_{self.algorithm}')
-        arrival_subplot.figure.savefig(f'results/charts/arrival_{self.algorithm}')
+        # handle path in linux and windows
+        fig_folder_path = Path("results/charts/")
+        priority_subplot.figure.savefig(fig_folder_path / f'priority_{self.algorithm}')
+        burst_subplot.figure.savefig(fig_folder_path / f'burst_{self.algorithm}')
+        arrival_subplot.figure.savefig(fig_folder_path / f'arrival_{self.algorithm}')
 
     def __str__(self):
         return {
