@@ -82,6 +82,38 @@ class AnimatedGIF(tk.Label, object):
         super(AnimatedGIF, self).place_forget(**kwargs)
 
 
+def show_information_page(data: dict, simulator):
+    information_page = tk.Tk()
+    information_page.geometry('650x600+350+40')
+    information_page.title(f"{simulator.algorithm} Information")
+    information_page.minsize(width=400, height=400)
+    information_page.maxsize(width=850, height=700)
+
+    # background
+    label_image = tk.PhotoImage(file='bg.png')
+    label_bg = tk.Label(information_page, image=label_image, relief=tk.FLAT)
+    label_bg.place(relwidth=1, relheight=1)
+
+    # rerun algorithm
+    def rerun_button():
+        simulator.run()
+        print(simulator.__str__())
+        simulator.save_result_simulation()
+        information_page.destroy()
+        show_information_page(simulator.json_export(), simulator)
+
+    # plot algorithm result button
+    def plot_algorithm_result_button():
+        simulator.plot_algorithm_result()
+
+    # exit button
+    def exit_button_command():
+        m1 = messagebox.askyesno("Exit Box", "are you sure you want to exit?")
+        if m1:
+            information_page.destroy()
+
+    information_page.mainloop()
+
 def run():
     main_window = tk.Tk()
     main_window.geometry('850x700+350+40')
