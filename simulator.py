@@ -55,9 +55,9 @@ class Simulator:
 
         df = df.sort_values(column, ignore_index=True)
         unique_columns = list(df[column].unique())
-        # dataframe for plotting data
 
         data = []
+        # compress column based on column name
         if column == "priority":
             # mean over each priority
             for c in unique_columns:
@@ -67,14 +67,65 @@ class Simulator:
                     result['turnaround_time'],
                     result['response_time']
                 ])
+            # create dataframe
+            compress_df = pd.DataFrame(
+                data,
+                columns=['waiting_time', 'turnaround_time', 'response_time'],
+                index=unique_columns)
+
         elif column == "burst_time":
-            pass
+
+            # divide variety of the column to 20 part and create range of numbers instead of a number
+            pieces = 20 if len(unique_columns) > 20 else 1
+            batches = len(unique_columns) // pieces
+            index_ranges = []
+
+            for c in range(pieces + 1):
+                low_range = batches * c
+                high_range = batches * (c + 1)
+                # mean over the ranges
+                result = df.where((low_range <= df[column]) & (df[column] < high_range)).mean(numeric_only=True)
+                data.append([
+                    result['waiting_time'],
+                    result['turnaround_time'],
+                    result['response_time']
+                ])
+
+                # create index ranges for creating index of dataframe
+                index_ranges.append(f"{low_range}-{high_range}")
+
+            # create dataframe
+            compress_df = pd.DataFrame(
+                data,
+                columns=['waiting_time', 'turnaround_time', 'response_time'],
+                index=index_ranges)
+
         elif column == "arrival_time":
-            pass
-        compress_df = pd.DataFrame(
-            data,
-            columns=['waiting_time', 'turnaround_time', 'response_time'],
-            index=unique_columns)
+            # divide variety of the column to 20 part and create range of numbers instead of a number
+            pieces = 20 if len(unique_columns) > 20 else 1
+            batches = len(unique_columns) // pieces
+            index_ranges = []
+
+            for c in range(pieces + 1):
+                low_range = batches * c
+                high_range = batches * (c + 1)
+                # mean over the ranges
+                result = df.where((low_range <= df[column]) & (df[column] < high_range)).mean(numeric_only=True)
+                data.append([
+                    result['waiting_time'],
+                    result['turnaround_time'],
+                    result['response_time']
+                ])
+
+                # create index ranges for creating index of dataframe
+                index_ranges.append(f"{low_range}-{high_range}")
+
+            # create dataframe
+            compress_df = pd.DataFrame(
+                data,
+                columns=['waiting_time', 'turnaround_time', 'response_time'],
+                index=index_ranges)
+
         return compress_df
 
     @staticmethod
