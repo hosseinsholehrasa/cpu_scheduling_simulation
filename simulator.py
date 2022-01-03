@@ -2,7 +2,7 @@ import random
 import time
 import algorithms  # local module
 import pandas as pd
-import graphic as simulation_graphic
+from graphics import graphic as simulation_graphic
 
 from process import Process
 from pathlib import Path
