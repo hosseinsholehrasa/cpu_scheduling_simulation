@@ -202,6 +202,47 @@ class Simulator:
 
         return True
 
+    def analyze_algorithms(self):
+        columns = [
+            'cpu_total_time', 'average_waiting_time', 'average_turnaround_time', 'average_response_time'
+        ]
+        algorithms_data = []
+        exists_algorithms = []
+        for algo in self.algorithms_list:
+            try:
+                df = pd.read_csv(f"results/{algo}.csv", usecols=columns)
+                algorithms_data.append([
+                    algo,   # algorithm name
+                    df['cpu_total_time'][0],
+                    df['average_waiting_time'][0],
+                    df['average_turnaround_time'][0],
+                    df['average_response_time'][0],
+                ])
+                exists_algorithms.append(algo)
+            except FileNotFoundError:
+                pass
+
+        if algorithms_data is None:
+            raise Exception("You have to run one algorithm at least")
+
+        columns.insert(0, 'name')
+        algorithms_df = pd.DataFrame(algorithms_data, columns=columns, index=exists_algorithms)
+        algorithms_df.to_csv("results/results.csv", index=False)
+
+        # create subpot
+        subplot = algorithms_df.plot(kind='bar')
+        subplot.set_xlabel('algorithm name')
+        subplot.set_ylabel('Time')
+        subplot.set_title(f"analyze algorithms")
+        subplot.legend()
+
+        subplot.figure.set_size_inches(20.5, 15.5)
+        # Set the figure title
+        subplot.figure.canvas.manager.set_window_title(f"analyze {self.total_process} algorithms")
+        subplot.figure.show()
+        subplot.figure.savefig('results/result')
+
+
     def __str__(self):
         return {
             "total_process": self.total_process,
