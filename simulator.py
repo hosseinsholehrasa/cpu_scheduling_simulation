@@ -25,6 +25,13 @@ def get_cpu_time_unit():
 class Simulator:
 
     def __init__(self, algorithm: str):
+        """
+        run_time attr is for running algorithm in second
+        cpu_total_time is total time of running processes for cpu. The number doesn't have any unit
+        cpu_run_time attr total time of running processes for cpu. unit of time depend on get_cpu_time_unit function
+
+        :param algorithm: algorithm name that valid in algorithm list
+        """
         self.algorithm = algorithm
         self.algorithm_class = self.get_algorithm_class()
         self.algorithms_list = ["FCFS", "NonPreemptiveSFJ", "PreemptiveSFJ", "RR",
@@ -32,6 +39,7 @@ class Simulator:
         self.processes = []
         self.total_process = 0
         self.run_time = 0
+        self.cpu_run_time = 0
         self.cpu_total_time = 0
         self.cpu_utilization = 0
         self.throughput = 0
@@ -121,8 +129,8 @@ class Simulator:
         # this processes referred to executed processes in output of algorithm run
         processes = result['executed_processes']
         total_process = len(processes)
-        cpu_total_time = result['cpu_total_time'] * get_cpu_time_unit()
-
+        cpu_total_time = result['cpu_total_time']
+        cpu_run_time = cpu_total_time * get_cpu_time_unit()
         throughput = total_process / cpu_total_time
         cpu_utilization = (cpu_total_time - result['cpu_idle_time']) / cpu_total_time
 
@@ -132,6 +140,7 @@ class Simulator:
 
         self.total_process = total_process
         self.cpu_total_time = cpu_total_time
+        self.cpu_run_time = cpu_run_time
         self.throughput = throughput
         self.cpu_utilization = cpu_utilization
         self.average_waiting_time = average_waiting_time
@@ -154,10 +163,14 @@ class Simulator:
 
         self.processes.sort(key=lambda p: p.pid)
         data = []
-        columns = ['pid', 'arrival_time', 'priority', 'burst_time', 'waiting_time', 'turnaround_time', 'response_time',
-                   'start_time', 'end_time',    # process information
-                   'total_process', 'cpu_total_time', 'cpu_utilization', 'throughput',  # simulation information
-                   'average_waiting_time', 'average_turnaround_time', 'average_response_time']
+        columns = [
+            # process information
+            'pid', 'arrival_time', 'priority', 'burst_time', 'waiting_time', 'turnaround_time', 'response_time',
+            'start_time', 'end_time',
+            # simulation information
+            'total_process', 'run_time', 'cpu_total_time', 'cpu_run_time', 'cpu_utilization', 'throughput',
+            'average_waiting_time', 'average_turnaround_time', 'average_response_time'
+        ]
         # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
         for process in self.processes:
             data.append([
@@ -175,7 +188,9 @@ class Simulator:
         # insert simulation information to just first row
         data[0].extend([
             self.total_process,
+            self.run_time,
             self.cpu_total_time,
+            self.cpu_run_time,
             self.cpu_utilization,
             self.throughput,
             self.average_waiting_time,
@@ -192,6 +207,7 @@ class Simulator:
             "total_process": self.total_process,
             "run_time": self.run_time,
             "cpu_total_time": self.cpu_total_time,
+            "cpu_run_time": self.cpu_run_time,
             "throughput": self.throughput,
             "cpu_utilization": self.cpu_utilization,
             "average_waiting_time": self.average_waiting_time,
