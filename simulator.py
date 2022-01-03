@@ -48,7 +48,14 @@ class Simulator:
         self.average_response_time = 0.0
 
     def _compress_df_rows(self, df: pd.DataFrame, column: str) -> pd.DataFrame:
-
+        """
+        you can compress your dataframe based on your column name.
+        for example you have 1000 rows that their priority column have value of 0
+        so you average values of all other columns and compress 1000 rows to one
+        :param df: dataframe which you want to compress same column values
+        :param column: the column that you want to compress values
+        :return: compressed dataframe
+        """
         # raise error if column not in compress columns
         if column not in ('priority', 'burst_time', 'arrival_time'):
             raise KeyError("Your column not valid")
