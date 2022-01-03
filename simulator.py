@@ -404,23 +404,23 @@ class Simulator:
         arrival_subplot.figure.set_size_inches(30, 15)
 
         fig_text = (
-            'Simulation time: %.10f s\n'
-            'CPU total time: %.0f s\n'
-            'CPU run time: %.0f s\n'
-            'CPU utilization: %.6f%%\n'
-            'Throughput: %.6f\n'
-            'Average waiting time: %.2f\n'
-            'Average turnaround time: %.2f\n'
-            'Average response time: %.2f' % (
-                self.run_time,
-                self.cpu_total_time,
-                self.cpu_run_time,
-                (self.cpu_utilization * 100),
-                self.throughput,
-                self.average_waiting_time,
-                self.average_turnaround_time,
-                self.average_response_time
-            )
+                'Simulation time: %.10f s\n'
+                'CPU total time: %.0f s\n'
+                'CPU run time: %.0f s\n'
+                'CPU utilization: %.6f%%\n'
+                'Throughput: %.6f\n'
+                'Average waiting time: %.2f\n'
+                'Average turnaround time: %.2f\n'
+                'Average response time: %.2f' % (
+                    self.run_time,
+                    self.cpu_total_time,
+                    self.cpu_run_time,
+                    (self.cpu_utilization * 100),
+                    self.throughput,
+                    self.average_waiting_time,
+                    self.average_turnaround_time,
+                    self.average_response_time
+                )
         )
 
         # add text to subplots
@@ -451,8 +451,9 @@ class Simulator:
         burst_subplot.figure.savefig(fig_folder_path / f'burst_{self.algorithm}')
         arrival_subplot.figure.savefig(fig_folder_path / f'arrival_{self.algorithm}')
 
-    def __str__(self):
+    def json_export(self):
         return {
+            "processes": self.processes,
             "total_process": self.total_process,
             "run_time": self.run_time,
             "cpu_total_time": self.cpu_total_time,
@@ -463,6 +464,29 @@ class Simulator:
             "average_turnaround_time": self.average_turnaround_time,
             "average_response_time": self.average_response_time
         }
+
+    def __str__(self):
+        return (
+            'Total processes: %.0f \n'
+            'Simulation time: %.10f s\n'
+            'CPU total time: %.0f \n'
+            'CPU run time: %.0f s\n'
+            'CPU utilization: %.6f%%\n'
+            'Throughput: %.6f\n'
+            'Average waiting time: %.2f\n'
+            'Average turnaround time: %.2f\n'
+            'Average response time: %.2f' % (
+                self.total_process,
+                self.run_time,
+                self.cpu_total_time,
+                self.cpu_run_time,
+                (self.cpu_utilization * 100),
+                self.throughput,
+                self.average_waiting_time,
+                self.average_turnaround_time,
+                self.average_response_time
+            )
+        )
 
 
 if __name__ == '__main__':
