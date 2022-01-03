@@ -136,7 +136,7 @@ class Simulator:
         return compress_df
 
     @staticmethod
-    def generate_processes_data(path: str, size: int = 1000, max_arrival_time: int = 1000) -> bool:
+    def generate_processes_data(path: str = 'data.csv', size: int = 1000, max_arrival_time: int = 1000) -> bool:
         """
         Generate process with random numbers for arrival and burst time and priority. then save it to a csv file
         :param max_arrival_time: maximum number for random number of arrival time
@@ -159,7 +159,7 @@ class Simulator:
 
         return True
 
-    def read_processes_data(self, path=None, dataframe=None) -> bool:
+    def read_processes_data(self, path='data.csv', dataframe=None) -> bool:
         """
         read data from csv file or pandas dataframe
         one of path or dataframe parms needed
