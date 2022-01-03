@@ -1,7 +1,7 @@
 import random
 import pandas as pd
-import algorithms
 import time
+import algorithms
 
 from process import Process
 
@@ -330,6 +330,103 @@ class Simulator:
         subplot.figure.show()
         subplot.figure.savefig('results/result')
 
+    def plot_algorithm_result(self):
+        try:
+            df = pd.read_csv(f"results/{str(self.algorithm)}.csv")
+        except FileNotFoundError:
+            raise Exception("You should have run algorithm first")
+
+        # set data
+        try:
+            self.run_time = df['run_time'][0]
+            self.cpu_total_time = df['cpu_total_time'][0]
+            self.cpu_run_time = df['cpu_run_time'][0]
+            self.cpu_utilization = df['cpu_utilization'][0]
+            self.throughput = df['throughput'][0]
+            self.average_waiting_time = df['average_waiting_time'][0]
+            self.average_turnaround_time = df['average_turnaround_time'][0]
+            self.average_response_time = df['average_response_time'][0]
+        except:
+            pass
+
+        df = df[['burst_time', 'arrival_time', 'priority', 'waiting_time', 'turnaround_time', 'response_time']]
+
+        # get compressed dataframe for showing in chart
+        # subplot settings based on priority
+        priority_df = self._compress_df_rows(df, 'priority')
+        priority_subplot = priority_df.plot(
+            kind='bar',
+            xlabel="Priority",
+            ylabel="Time",
+            title=self.algorithm
+        )
+        priority_subplot.figure.set_size_inches(30, 15)
+
+        # subplot settings based on burst time
+        burst_df = self._compress_df_rows(df, 'burst_time')
+        burst_subplot = burst_df.plot(
+            kind='bar',
+            xlabel="Burst time",
+            ylabel="Time",
+            title=self.algorithm
+        )
+        burst_subplot.figure.set_size_inches(30, 15)
+
+        # subplot settings based on arrival time
+        arrival_df = self._compress_df_rows(df, 'arrival_time')
+        arrival_subplot = arrival_df.plot(
+            kind='bar',
+            xlabel="Arrival time",
+            ylabel="Time",
+            title=self.algorithm
+        )
+        arrival_subplot.figure.set_size_inches(30, 15)
+
+        fig_text = (
+            'Simulation time: %.10f s\n'
+            'CPU total time: %.0f s\n'
+            'CPU run time: %.0f s\n'
+            'CPU utilization: %.6f%%\n'
+            'Throughput: %.6f\n'
+            'Average waiting time: %.2f\n'
+            'Average turnaround time: %.2f\n'
+            'Average response time: %.2f' % (
+                self.run_time,
+                self.cpu_total_time,
+                self.cpu_run_time,
+                (self.cpu_utilization * 100),
+                self.throughput,
+                self.average_waiting_time,
+                self.average_turnaround_time,
+                self.average_response_time
+            )
+        )
+
+        # add text to subplots
+        priority_subplot.figure.text(
+            0.5, 0.25,
+            fig_text,
+            bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 50}
+        )
+        burst_subplot.figure.text(
+            0.5, 0.25,
+            fig_text,
+            bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 50}
+        )
+        arrival_subplot.figure.text(
+            0.5, 0.25,
+            fig_text,
+            bbox={'facecolor': 'white', 'alpha': 0.5, 'pad': 50}
+        )
+
+        # show and save
+        priority_subplot.figure.show()
+        burst_subplot.figure.show()
+        arrival_subplot.figure.show()
+
+        priority_subplot.figure.savefig(f'results/charts/priority_{self.algorithm}')
+        burst_subplot.figure.savefig(f'results/charts/burs_{self.algorithm}')
+        arrival_subplot.figure.savefig(f'results/charts/arrival_{self.algorithm}')
 
     def __str__(self):
         return {
