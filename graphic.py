@@ -117,15 +117,46 @@ def show_information_page(data: dict, simulator):
 def run():
     main_window = tk.Tk()
     main_window.geometry('850x700+350+40')
-    main_window.title("CPU Scheduling Simulation")
+    main_window.title("CPU Simulator")
     main_window.resizable(0, 0)
-    canvas = tk.Canvas(main_window, width=600, height=400)
-    canvas.pack()
-    bg = tk.Label(main_window, bg='gray95')
-    bg.place(relwidth=1, relheight=1)
 
     animation = AnimatedGIF(main_window, "gk.gif")
     animation.place(x=-1, y=-1)
+
+    label = tk.Label(main_window, text='CPU Scheduling Simulation', font=("Courier", 32))
+    label.place(x=100, y=30)
+
+    ########################################## Algo page ########################################################
+    # Next page after menu to choose an algorithm
+    def algo_page(simulator=None):
+        algorithm_page = tk.Tk()
+        main_window.destroy()
+        algorithm_page.title("CPU Simulator")
+        algorithm_page.geometry("850x700+350+40")
+        algorithm_page.resizable(0, 0)
+
+        # label
+        label = tk.Label(algorithm_page, text='CPU Scheduling Simulation', font=("Courier", 32))
+        label.place(x=100, y=30)
+
+        # animation
+        # anime = AnimatedGIF(algorithm_page, "giphy.gif")
+        # anime.place(x=-1, y=-1)
+        def choose_algorithm_button(algorithm: str):
+            if algorithm not in simulator.algorithms_list:
+                messagebox.showerror("Error", "Invalid Algorithm")
+                return 0
+            simulator.set_algorithm(algorithm)
+            simulator.run()
+            print(simulator.__str__())
+            simulator.save_result_simulation()
+            simulate_data = simulator.json_export()
+            # show information
+            show_information_page(simulate_data, simulator)
+
+        algorithm_page.mainloop()
+
+    ########################################## main page ########################################################
 
     # generate button
     def generte_button_command():
