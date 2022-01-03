@@ -27,6 +27,8 @@ class Simulator:
     def __init__(self, algorithm: str):
         self.algorithm = algorithm
         self.algorithm_class = self.get_algorithm_class()
+        self.algorithms_list = ["FCFS", "NonPreemptiveSFJ", "PreemptiveSFJ", "RR",
+                                "NonPreemptivePriority", "PreemptivePriority"]
         self.processes = []
         self.total_process = 0
         self.run_time = 0
@@ -58,52 +60,6 @@ class Simulator:
 
         df = pd.DataFrame(data, columns=['pid', 'arrival_time', 'priority', 'burst_time'])
         df.to_csv(path_or_buf=path, index=False)
-
-        return True
-
-    def save_result_simulation(self):
-        """
-        Save result of simulation to results/algorithmname.csv
-        :param max_arrival_time: maximum number for random number of arrival time
-        :param path: path to save csv file
-        :param size: number of processes
-        :return: bool
-        """
-        if not self.cpu_total_time > 0:
-            print("you have to run an algorithm then save it")
-            return
-
-        data = []
-        columns = ['pid', 'arrival_time', 'priority', 'burst_time', 'waiting_time', 'turnaround_time', 'response_time',
-                   'start_time', 'end_time',    # process information
-                   'total_process', 'cpu_total_time', 'cpu_utilization', 'throughput',  # simulation information
-                   'average_waiting_time', 'average_turnaround_time', 'average_response_time']
-        # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
-        for process in self.processes:
-            data.append([
-                process.pid,
-                process.arrival_time,
-                process.priority,
-                process.burst_time,
-                process.waiting_time,
-                process.turnaround_time,
-                process.response_time,
-                process.start_time,
-                process.end_time,
-            ])
-
-        # insert simulation information to just first row
-        data[0].extend([
-            self.total_process,
-            self.cpu_total_time,
-            self.cpu_utilization,
-            self.throughput,
-            self.average_waiting_time,
-            self.average_turnaround_time,
-            self.average_response_time
-        ])
-        df = pd.DataFrame(data, columns=columns)
-        df.to_csv(path_or_buf=f"results/{str(self.algorithm)}.csv", index=False)
 
         return True
 
@@ -183,6 +139,53 @@ class Simulator:
         self.average_response_time = average_response_time
         # update processes
         self.processes = processes
+
+    def save_result_simulation(self):
+        """
+        Save result of simulation to results/algorithmname.csv
+        :param max_arrival_time: maximum number for random number of arrival time
+        :param path: path to save csv file
+        :param size: number of processes
+        :return: bool
+        """
+        if not self.cpu_total_time > 0:
+            print("you have to run an algorithm then save it")
+            return
+
+        self.processes.sort(key=lambda p: p.pid)
+        data = []
+        columns = ['pid', 'arrival_time', 'priority', 'burst_time', 'waiting_time', 'turnaround_time', 'response_time',
+                   'start_time', 'end_time',    # process information
+                   'total_process', 'cpu_total_time', 'cpu_utilization', 'throughput',  # simulation information
+                   'average_waiting_time', 'average_turnaround_time', 'average_response_time']
+        # save data as lists of lists then create dataframe. e.g [ [pid1, arrival1], [pid2, arrival2]]
+        for process in self.processes:
+            data.append([
+                process.pid,
+                process.arrival_time,
+                process.priority,
+                process.burst_time,
+                process.waiting_time,
+                process.turnaround_time,
+                process.response_time,
+                process.start_time,
+                process.end_time,
+            ])
+
+        # insert simulation information to just first row
+        data[0].extend([
+            self.total_process,
+            self.cpu_total_time,
+            self.cpu_utilization,
+            self.throughput,
+            self.average_waiting_time,
+            self.average_turnaround_time,
+            self.average_response_time
+        ])
+        df = pd.DataFrame(data, columns=columns)
+        df.to_csv(path_or_buf=f"results/{str(self.algorithm)}.csv", index=False)
+
+        return True
 
     def __str__(self):
         return {
