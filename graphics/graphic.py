@@ -5,7 +5,6 @@ from PIL import ImageTk, Image
 from simulator import Simulator
 from pathlib import Path
 
-
 gp_folder = Path('graphics/')
 
 
@@ -118,6 +117,7 @@ def show_information_page(data: dict, simulator):
 
     information_page.mainloop()
 
+
 def run():
     main_window = tk.Tk()
     main_window.geometry('850x700+350+40')
@@ -140,8 +140,10 @@ def run():
         algorithm_page.resizable(0, 0)
 
         # label
-        label = tk.Label(algorithm_page, text='CPU Scheduling Simulation', font=("Courier", 32))
-        label.place(x=100, y=30)
+        label = tk.Label(
+            algorithm_page, text='CPU Scheduling Simulation', font=("Courier", 30)
+        ).place(x=120, y=30)
+
 
         # animation
         # anime = AnimatedGIF(algorithm_page, "gp_folder / giphy.gif")
@@ -158,6 +160,57 @@ def run():
             # show information
             show_information_page(simulate_data, simulator)
 
+        # algorithm buttons
+
+        # FCFS button
+        btn_fcfs = tk.Button(
+            algorithm_page, text='FCFS', font=("chiller", 18), height=2, width=8,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("FCFS")
+        )
+        btn_fcfs.place(x=70, y=200)
+
+        # preemptive priority
+        btn_pp = tk.Button(
+            algorithm_page, text='Preemptive Priority', font=("chiller", 18), height=2, width=15,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("PreemptivePriority")
+        ).place(x=220, y=200)
+
+        # non preemptive priority
+        btn_p = tk.Button(
+            algorithm_page, text='Non-Preemptive Priority', font=("chiller", 18), height=2, width=18,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("NonPreemptivePriority")
+        ).place(x=475, y=200)
+
+        # RR
+        btn_rr = tk.Button(
+            algorithm_page, text='RR', font=("chiller", 18), height=2, width=8,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("RR")
+        ).place(x=70, y=350)
+
+        # preemptive SF
+        btn_psfj = tk.Button(
+            algorithm_page, text='Preemptive SFJ', font=("chiller", 18), height=2, width=15,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("PreemptiveSFJ")
+        ).place(x=220, y=350)
+
+        # non-preemptive SFJ
+        btn_sfj = tk.Button(
+            algorithm_page, text='Non-Preemptive SFJ', font=("chiller", 18), height=2, width=18,
+            bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("NonPreemptiveSFJ")
+        ).place(x=475, y=350)
+
+        # back
+        btn_back = tk.Button(
+            algorithm_page, text='back', font=("chiller", 18), height=2, width=8,
+            bg="maroon3", fg="yellow", command=lambda: 1
+        ).place(x=30, y=600)
+
+        # analyze all algorithms
+        btn_back = tk.Button(
+            algorithm_page, text='Analyze All', font=("chiller", 18), height=2, width=10,
+            bg="maroon3", fg="yellow", command=lambda: 1
+        ).place(x=640, y=600)
+
         algorithm_page.mainloop()
 
     ########################################## main page ########################################################
@@ -170,7 +223,9 @@ def run():
         if result:
             messagebox.showinfo("Info", f"{number} processes generated in {path}")
             # going to next page
-            algo_page()
+            simulator = Simulator("FCFS")
+            simulator.read_processes_data(path)
+            algo_page(simulator)
 
     btn_generate = tk.Button(main_window, text='Generate Processes', font=("chiller", 18), height=2, width=20,
                              bg="maroon3", fg="yellow", command=generate_button_command)
