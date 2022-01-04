@@ -86,17 +86,31 @@ class AnimatedGIF(tk.Label, object):
         super(AnimatedGIF, self).place_forget(**kwargs)
 
 
-def show_information_page(data: dict, simulator):
+def show_information_page(simulator):
     information_page = tk.Toplevel()
-    information_page.geometry('650x600+350+40')
+    information_page.geometry('550x450+350+40')
     information_page.title(f"{simulator.algorithm} Information")
-    information_page.minsize(width=400, height=400)
-    information_page.maxsize(width=850, height=700)
+    information_page.minsize(width=450, height=400)
+    information_page.maxsize(width=650, height=600)
 
     # background
     label_image = tk.PhotoImage(file=gp_folder / 'bg.png')
     label_bg = tk.Label(information_page, image=label_image, relief=tk.FLAT)
     label_bg.place(relwidth=1, relheight=1)
+
+    # information lables
+    tk.Label(
+        information_page, text=f'{simulator.__str__()}', font=("Courier", 16)
+    ).pack()
+
+    # plot algorithm result button
+    def plot_algorithm_result_button():
+        simulator.plot_algorithm_result()
+
+    tk.Button(
+        information_page, text='plot result', font=("chiller", 18), height=2, width=8,
+        bg="maroon3", fg="yellow", command=plot_algorithm_result_button
+    ).pack(side=tk.BOTTOM)
 
     # rerun algorithm
     def rerun_button():
@@ -106,20 +120,10 @@ def show_information_page(data: dict, simulator):
         information_page.destroy()
         show_information_page(simulator.json_export(), simulator)
 
-    # plot algorithm result button
-    def plot_algorithm_result_button():
-        simulator.plot_algorithm_result()
-
-    # exit button
-    def exit_button_command():
-        m1 = messagebox.askyesno("Exit Box", "are you sure you want to exit?")
-        if m1:
-            information_page.destroy()
-
-    b_exit = tk.Button(
-        information_page, text="exit", font=("chiller", 17),
-        height=2, width=10, bg="maroon3", fg="yellow", command=exit_button_command
-    ).place(x=330, y=450)
+    tk.Button(
+        information_page, text='Re Run', font=("chiller", 18), height=2, width=8,
+        bg="maroon3", fg="yellow", command=rerun_button
+    ).pack(side=tk.BOTTOM)
 
     information_page.mainloop()
 
@@ -149,11 +153,6 @@ def run():
         animation = AnimatedGIF(algorithm_page, gp_folder / "giphy.gif")
         animation.place(x=-1, y=-1)
 
-        # label
-        label = tk.Label(
-            algorithm_page, text='CPU Scheduling Simulation', font=("Courier", 30)
-        ).place(x=120, y=30)
-
         def choose_algorithm_button(algorithm: str):
             if algorithm not in simulator.algorithms_list:
                 messagebox.showerror("Error", "Invalid Algorithm")
@@ -164,7 +163,7 @@ def run():
             simulator.save_result_simulation()
             simulate_data = simulator.json_export()
             # show information
-            show_information_page(simulate_data, simulator)
+            show_information_page(simulator)
 
         # algorithm buttons
 
@@ -173,7 +172,7 @@ def run():
             algorithm_page, text='FCFS', font=("chiller", 18), height=2, width=8,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("FCFS")
         )
-        btn_fcfs.place(x=70, y=200)
+        btn_fcfs.place(x=60, y=200)
 
         # preemptive priority
         btn_pp = tk.Button(
@@ -185,25 +184,25 @@ def run():
         btn_p = tk.Button(
             algorithm_page, text='Non-Preemptive Priority', font=("chiller", 18), height=2, width=18,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("NonPreemptivePriority")
-        ).place(x=475, y=200)
+        ).place(x=480, y=200)
 
         # RR
         btn_rr = tk.Button(
             algorithm_page, text='RR', font=("chiller", 18), height=2, width=8,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("RR")
-        ).place(x=70, y=350)
+        ).place(x=60, y=300)
 
         # preemptive SF
         btn_psfj = tk.Button(
             algorithm_page, text='Preemptive SFJ', font=("chiller", 18), height=2, width=15,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("PreemptiveSFJ")
-        ).place(x=220, y=350)
+        ).place(x=220, y=300)
 
         # non-preemptive SFJ
         btn_sfj = tk.Button(
             algorithm_page, text='Non-Preemptive SFJ', font=("chiller", 18), height=2, width=18,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("NonPreemptiveSFJ")
-        ).place(x=475, y=350)
+        ).place(x=480, y=300)
 
         # back
         def back_button_command():
@@ -226,6 +225,7 @@ def run():
                     print(s.__str__())
                     s.save_result_simulation()
             simulator.analyze_algorithms()
+
         btn_analyzer = tk.Button(
             algorithm_page, text='Analyze All', font=("chiller", 18), height=2, width=10,
             bg="maroon3", fg="yellow", command=analyze_all_button
@@ -262,7 +262,7 @@ def run():
             algo_page(simulator)
 
     btn_load = tk.Button(main_window, text='Load Processes', font=("chiller", 18), height=2, width=20,
-                         bg="maroon3", fg="yellow", command=load_button_command)
+                         bg="maroon3", fg="yellow", command=load_button_command())
     btn_load.place(x=250, y=350)
 
     # exit button
