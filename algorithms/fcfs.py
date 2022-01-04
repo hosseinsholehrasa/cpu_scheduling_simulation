@@ -32,7 +32,7 @@ class FCFS(object):
             if process.arrival_time > self.timeline:
                 self.cpu_idle_time += process.arrival_time - self.timeline
                 # update time
-                timeline = process.arrival_time
+                self.timeline = process.arrival_time
 
             # Run the process
             process.start_time = self.timeline
