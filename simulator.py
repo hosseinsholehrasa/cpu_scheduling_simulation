@@ -313,16 +313,15 @@ class Simulator:
         # handle path in linux and windows
         folder_path = Path("results/")
         columns = [
-            'cpu_total_time', 'average_waiting_time', 'average_turnaround_time', 'average_response_time'
+            'average_waiting_time', 'average_turnaround_time', 'average_response_time'
         ]
         algorithms_data = []
         exists_algorithms = []
         for algo in self.algorithms_list:
             try:
-                df = pd.read_csv(folder_path / f"{self.algorithm}.csv", usecols=columns)
+                df = pd.read_csv(folder_path / f"{algo}.csv", usecols=columns)
                 algorithms_data.append([
                     algo,  # algorithm name
-                    df['cpu_total_time'][0],
                     df['average_waiting_time'][0],
                     df['average_turnaround_time'][0],
                     df['average_response_time'][0],
@@ -493,18 +492,3 @@ class Simulator:
 
 if __name__ == '__main__':
     simulation_graphic.run()
-    # algorithm = "NonPreemptivePriority"
-    # simulate = Simulator(algorithm)
-    # for al in ["NonPreemptivePriority", "PreemptivePriority"]:
-    #     s = Simulator(al)
-    #     s.read_processes_data("data.csv")
-    #     s.run()
-    #     print(s.__str__())
-    #     s.save_result_simulation()
-
-    # simulate.analyze_algorithms()
-    # simulate.read_processes_data()
-    # simulate.run()
-    # print(simulate.__str__())
-    # simulate.save_result_simulation()
-    # simulate.plot_algorithm_result()
