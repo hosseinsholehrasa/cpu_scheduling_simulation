@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinter import messagebox
 
@@ -86,7 +87,7 @@ class AnimatedGIF(tk.Label, object):
 
 
 def show_information_page(data: dict, simulator):
-    information_page = tk.Tk()
+    information_page = tk.Toplevel()
     information_page.geometry('650x600+350+40')
     information_page.title(f"{simulator.algorithm} Information")
     information_page.minsize(width=400, height=400)
@@ -115,6 +116,11 @@ def show_information_page(data: dict, simulator):
         if m1:
             information_page.destroy()
 
+    b_exit = tk.Button(
+        information_page, text="exit", font=("chiller", 17),
+        height=2, width=10, bg="maroon3", fg="yellow", command=exit_button_command
+    ).place(x=330, y=450)
+
     information_page.mainloop()
 
 
@@ -133,21 +139,21 @@ def run():
     ########################################## Algo page ########################################################
     # Next page after menu to choose an algorithm
     def algo_page(simulator=None):
-        algorithm_page = tk.Tk()
-        main_window.destroy()
+        algorithm_page = tk.Toplevel()
+        main_window.withdraw()
         algorithm_page.title("CPU Simulator")
         algorithm_page.geometry("850x700+350+40")
         algorithm_page.resizable(0, 0)
+
+        # animation
+        animation = AnimatedGIF(algorithm_page, gp_folder / "giphy.gif")
+        animation.place(x=-1, y=-1)
 
         # label
         label = tk.Label(
             algorithm_page, text='CPU Scheduling Simulation', font=("Courier", 30)
         ).place(x=120, y=30)
 
-
-        # animation
-        # anime = AnimatedGIF(algorithm_page, "gp_folder / giphy.gif")
-        # anime.place(x=-1, y=-1)
         def choose_algorithm_button(algorithm: str):
             if algorithm not in simulator.algorithms_list:
                 messagebox.showerror("Error", "Invalid Algorithm")
@@ -200,15 +206,29 @@ def run():
         ).place(x=475, y=350)
 
         # back
+        def back_button_command():
+            algorithm_page.destroy()
+            main_window.deiconify()
+
         btn_back = tk.Button(
             algorithm_page, text='back', font=("chiller", 18), height=2, width=8,
-            bg="maroon3", fg="yellow", command=lambda: 1
+            bg="maroon3", fg="yellow", command=back_button_command
         ).place(x=30, y=600)
 
         # analyze all algorithms
-        btn_back = tk.Button(
+        def analyze_all_button():
+            m1 = messagebox.askyesno("Analyzer", "Do you want to run all algorithms first?")
+            if m1:
+                for alg in simulator.algorithms_list:
+                    s = Simulator(alg)
+                    s.read_processes_data("data2.csv")
+                    s.run()
+                    print(s.__str__())
+                    s.save_result_simulation()
+            simulator.analyze_algorithms()
+        btn_analyzer = tk.Button(
             algorithm_page, text='Analyze All', font=("chiller", 18), height=2, width=10,
-            bg="maroon3", fg="yellow", command=lambda: 1
+            bg="maroon3", fg="yellow", command=analyze_all_button
         ).place(x=640, y=600)
 
         algorithm_page.mainloop()
