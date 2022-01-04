@@ -258,10 +258,10 @@ def run():
     # generate button
     def generate_button_command():
         path = 'data.csv'
-        answer = simpledialog.askstring("generation number", "How many processes do you want?",
-                                        parent=main_window)
-        if answer and answer.isdigit():
-            number = int(answer)
+        answer = simpledialog.askinteger("generation number", "How many processes do you want?",
+                                         parent=main_window)
+        if answer:
+            number = answer
         else:
             return 0
 
