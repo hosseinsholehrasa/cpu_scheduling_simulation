@@ -66,8 +66,7 @@ class NonPreemptiveSFJ(object):
             if arrived_processes:
                 self.ready_queue.sort(key=lambda p: p.burst_time)
 
-
-            if self.running_process is None:
+            if self.running_process is None and self.ready_queue:
                 # after sorting ready_queue by burst time, get first index and start to run that process
                 self.running_process = self.ready_queue.pop(0)
                 self.running_process.start_time = self.timeline
@@ -99,7 +98,10 @@ class NonPreemptiveSFJ(object):
         if future_processes:
             # next process arrival time or next ready queue arrival time
             if not self.running_process:
-                return min(future_processes[0].arrival_time, self.ready_queue[0].arrival_time)
+                try:
+                    return min(future_processes[0].arrival_time, self.ready_queue[0].arrival_time)
+                except IndexError:
+                    return self.timeline + 1
             # if we have running_process so next process arrival time or remaining time to execute process
             else:
                 return min(self.running_process.remaining_time + self.timeline, future_processes[0].arrival_time)
