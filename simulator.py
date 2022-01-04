@@ -186,6 +186,9 @@ class Simulator:
         else:
             raise Exception("Your file should be a csv format or pass dataframe object to function")
 
+        # clear last loaded processes
+        self.processes.clear()
+
         for i in range(0, df['pid'].count()):
             process = Process(
                 pid=df['pid'][i],
@@ -453,7 +456,6 @@ class Simulator:
 
     def json_export(self):
         return {
-            "processes": self.processes,
             "total_process": self.total_process,
             "run_time": self.run_time,
             "cpu_total_time": self.cpu_total_time,
