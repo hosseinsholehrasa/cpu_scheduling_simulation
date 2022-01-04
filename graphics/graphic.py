@@ -1,6 +1,7 @@
 import time
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import simpledialog
 
 from PIL import ImageTk, Image
 from simulator import Simulator
@@ -257,7 +258,13 @@ def run():
     # generate button
     def generate_button_command():
         path = 'data.csv'
-        number = 100_000
+        answer = simpledialog.askstring("generation number", "How many processes do you want?",
+                                        parent=main_window)
+        if answer and answer.isdigit():
+            number = int(answer)
+        else:
+            return 0
+
         result = Simulator.generate_processes_data(path, number)
         if result:
             messagebox.showinfo("Info", f"{number} processes generated in {path}")
