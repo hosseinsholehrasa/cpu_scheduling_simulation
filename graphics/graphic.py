@@ -105,6 +105,11 @@ def show_information_page(simulator):
 
     # plot algorithm result button
     def plot_algorithm_result_button():
+        m3 = messagebox.askokcancel("Waiting", "You have to wait until images be generate "
+                                               "You can find images in 'results' folder \n"
+                                               "Do you want to continue")
+        if not m3:
+            return 0
         simulator.plot_algorithm_result()
 
     tk.Button(
@@ -114,11 +119,17 @@ def show_information_page(simulator):
 
     # rerun algorithm
     def rerun_button():
+        m2 = messagebox.askokcancel("Waiting", "You have to wait until simulation be complete "
+                                               "then your screen will unfreeze!\n Do you want to continue\n"
+                                               "(30-60 seconds need)")
+        if not m2:
+            return 0
+        simulator.read_processes_data()
         simulator.run()
         print(simulator.__str__())
         simulator.save_result_simulation()
         information_page.destroy()
-        show_information_page(simulator.json_export(), simulator)
+        show_information_page(simulator)
 
     tk.Button(
         information_page, text='Re Run', font=("chiller", 18), height=2, width=8,
@@ -157,12 +168,19 @@ def run():
             if algorithm not in simulator.algorithms_list:
                 messagebox.showerror("Error", "Invalid Algorithm")
                 return 0
+            m2 = messagebox.askokcancel("Waiting", "You have to wait until simulation be complete "
+                                                   "then your screen will unfreeze!\n Do you want to continue\n"
+                                                   "(30-60 seconds need)")
+            if not m2:
+                return 0
+
             simulator.set_algorithm(algorithm)
+            simulator.read_processes_data()
             simulator.run()
             print(simulator.__str__())
             simulator.save_result_simulation()
-            simulate_data = simulator.json_export()
-            # show information
+
+            # show information page
             show_information_page(simulator)
 
         # algorithm buttons
@@ -171,8 +189,7 @@ def run():
         btn_fcfs = tk.Button(
             algorithm_page, text='FCFS', font=("chiller", 18), height=2, width=8,
             bg="maroon3", fg="yellow", command=lambda: choose_algorithm_button("FCFS")
-        )
-        btn_fcfs.place(x=60, y=200)
+        ).place(x=60, y=200)
 
         # preemptive priority
         btn_pp = tk.Button(
@@ -216,11 +233,13 @@ def run():
 
         # analyze all algorithms
         def analyze_all_button():
-            m1 = messagebox.askyesno("Analyzer", "Do you want to run all algorithms first?")
+            m1 = messagebox.askyesno(
+                "Analyzer", "Do you want to run all algorithms first?\n(You have to wait)", icon='warning'
+            )
             if m1:
                 for alg in simulator.algorithms_list:
                     s = Simulator(alg)
-                    s.read_processes_data("data2.csv")
+                    s.read_processes_data()
                     s.run()
                     print(s.__str__())
                     s.save_result_simulation()
@@ -237,14 +256,14 @@ def run():
 
     # generate button
     def generate_button_command():
-        path = 'data2.csv'
-        number = 1000
+        path = 'data.csv'
+        number = 100_000
         result = Simulator.generate_processes_data(path, number)
         if result:
             messagebox.showinfo("Info", f"{number} processes generated in {path}")
             # going to next page
             simulator = Simulator("FCFS")
-            simulator.read_processes_data(path)
+            simulator.read_processes_data()
             algo_page(simulator)
 
     btn_generate = tk.Button(main_window, text='Generate Processes', font=("chiller", 18), height=2, width=20,
@@ -253,16 +272,16 @@ def run():
 
     # load button
     def load_button_command():
-        path = 'data2.csv'
+        path = 'data.csv'
         simulator = Simulator("FCFS")
-        result = simulator.read_processes_data(path)
+        result = simulator.read_processes_data()
         if result:
-            messagebox.showinfo("Info", f"{simulator.total_process} loaded processes from {path}")
+            messagebox.showinfo("Info", f"{len(simulator.processes)} loaded processes from {path}")
             # going to next page
             algo_page(simulator)
 
     btn_load = tk.Button(main_window, text='Load Processes', font=("chiller", 18), height=2, width=20,
-                         bg="maroon3", fg="yellow", command=load_button_command())
+                         bg="maroon3", fg="yellow", command=load_button_command)
     btn_load.place(x=250, y=350)
 
     # exit button
