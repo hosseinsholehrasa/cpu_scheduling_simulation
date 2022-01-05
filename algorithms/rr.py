@@ -39,7 +39,7 @@ class RR(object):
                 self.running_process.end_time = self.timeline
                 # calculate turnaround and waiting and response time
                 self.running_process.turnaround_time = self.running_process.end_time - self.running_process.arrival_time
-                self.running_process.waiting_time = self.running_process.start_time - self.running_process.arrival_time
+                self.running_process.waiting_time = self.running_process.turnaround_time - self.running_process.burst_time
                 self.running_process.response_time = self.running_process.start_time - self.running_process.arrival_time
                 self.running_process.state = State.EXECUTED
                 self.executed_processes.append(self.running_process)
