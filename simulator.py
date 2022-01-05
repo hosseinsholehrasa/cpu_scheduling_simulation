@@ -148,9 +148,13 @@ class Simulator:
         return True
 
     @staticmethod
-    def generate_processes_data(path: str = 'data.csv', size: int = 1000, max_arrival_time: int = 1000) -> bool:
+    def generate_processes_data(
+            path: str = 'data.csv', size: int = 1000, max_arrival_time: int = 100, max_priority=10, max_burst_time=40
+    ) -> bool:
         """
         Generate process with random numbers for arrival and burst time and priority. then save it to a csv file
+        :param max_burst_time: maximum number for random number of burst time
+        :param max_priority: maximum number for random number of priority
         :param max_arrival_time: maximum number for random number of arrival time
         :param path: path to save csv file
         :param size: number of processes
@@ -162,8 +166,8 @@ class Simulator:
             data.append([
                 i + 1,  # PID
                 random.randint(0, max_arrival_time),  # arrival_time
-                random.randint(0, 20),  # priority
-                random.randint(0, 100),  # burst_time
+                random.randint(0, max_priority),  # priority
+                random.randint(0, max_burst_time),  # burst_time
             ])
 
         df = pd.DataFrame(data, columns=['pid', 'arrival_time', 'priority', 'burst_time'])
